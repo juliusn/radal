@@ -1,0 +1,26 @@
+{
+  "name": "radal-server",
+  "version": "1.0.0",
+  "description": "Server application for synchronizing data between Radal clients.",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliusn/radal-server.git"
+  },
+  "author": "Julius Niiniranta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/juliusn/radal-server/issues"
+  },
+  "homepage": "https://github.com/juliusn/radal-server#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1"
+  }
+}
