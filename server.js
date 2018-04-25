@@ -6,7 +6,7 @@ const result = dotenv.config();
 if (result.error) throw result.error;
 
 mongoose.connect(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/cat`).
+    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
     then(() => {
       console.log('Connected successfully.');
       app.listen(3000);
