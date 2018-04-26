@@ -58,5 +58,5 @@ typings/
 .env
 
 # IDE user specific settings
-workspace.xml
-tasks.xml
+.idea/workspace.xml
+.idea/tasks.xml
