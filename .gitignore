@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+# IDE user specific settings
+workspace.xml
+tasks.xml
