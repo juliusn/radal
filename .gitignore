@@ -108,3 +108,7 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# SSL keys and certificates
+*.csr
+*.pem
