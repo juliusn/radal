@@ -19,15 +19,7 @@ if (result.error) throw result.error;
 
 app.use(logger('dev'));
 
-if (!env) app.enable('trust proxy');
 
-app.use((req, res, next) => {
-  if (req.secure) {
-    next();
-  } else {
-    res.redirect('https://' + req.headers.host + req.url);
-  }
-});
 
 app.get('/', (req, res) => {
   res.send('works');
@@ -37,11 +29,28 @@ mongoose.connect(
     `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
     then(() => {
       let httpPort = !env ? 80 : 8080;
-      let httpsPort = !env ? 443 : 4433;
-      http.createServer(app).listen(httpPort);
-      debug('HTTP server up listening ' + httpPort);
-      https.createServer(options, app).listen(httpsPort);
-      debug('HTTPS server up listening ' + httpsPort);
+      let httpsPort = !env ? 443 : 3000;
+      if (env) {
+        https.createServer(options, app).listen(httpsPort);
+        debug('HTTPS server up listening ' + httpsPort);
+        http.createServer((req, res) => {
+          res.writeHead(301,
+              {'Location': 'https://localhost:' + httpsPort + req.url});
+          res.end();
+          debug('HTTP requests will be redirected over HTTPS to ' + httpsPort);
+        }).listen(httpPort);
+        debug('HTTP server up listening ' + httpPort);
+      } else {
+        app.enable('trust proxy');
+        app.use((req, res, next) => {
+          if (req.secure) {
+            next();
+          } else {
+            res.redirect('https://' + req.headers.host + req.url);
+          }
+        });
+        app.listen(3000);
+      }
     }, (err) => {
       debug(err.message);
     });
