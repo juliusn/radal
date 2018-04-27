@@ -6,9 +6,10 @@ const http = require('http');
 const https = require('https');
 const app = express();
 const mongoose = require('mongoose');
-const env = app.get('env');
 const result = dotenv.config();
 if (result.error) throw result.error;
+const env = app.get('env');
+debug('NODE_ENV: ', env);
 
 app.use(logger('dev'));
 
@@ -22,7 +23,7 @@ mongoose.connect(
       debug('Database connected!');
       let httpPort = !env ? 80 : 8080;
       let httpsPort = !env ? 443 : 3000;
-      if (env) {
+      if (env !== 'production') {
         const fs = require('fs');
         const sslkey = fs.readFileSync('ssl-key.pem');
         const sslcert = fs.readFileSync('ssl-cert.pem');
