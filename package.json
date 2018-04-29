@@ -4,7 +4,7 @@
   "description": "Server application for synchronizing data between Radal clients.",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node ./server.js",
+    "start": "node ./server.js",
     "devstart": "nodemon .server.js",
     "test": "test"
   },
