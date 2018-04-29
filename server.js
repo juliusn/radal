@@ -11,6 +11,7 @@ const path = require('path');
 const loginRouter = require('./routes/login');
 if (result.error) throw result.error;
 const env = app.get('env');
+const dev = env !== 'production';
 debug('NODE_ENV: ', env);
 
 app.use(logger('dev'));
@@ -24,9 +25,9 @@ mongoose.connect(
     `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
     then(() => {
       debug('Database connected!');
-      let httpPort = !env ? 80 : 8080;
-      let httpsPort = !env ? 443 : 3000;
-      if (env !== 'production') {
+      let httpPort = !dev ? 80 : 8080;
+      let httpsPort = !dev ? 443 : 3000;
+      if (dev) {
         const fs = require('fs');
         const sslkey = fs.readFileSync('ssl-key.pem');
         const sslcert = fs.readFileSync('ssl-cert.pem');
@@ -57,3 +58,5 @@ mongoose.connect(
     }, (err) => {
       debug(err.message);
     });
+
+module.exports.env = env;
