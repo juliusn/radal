@@ -7,15 +7,18 @@ const https = require('https');
 const app = express();
 const mongoose = require('mongoose');
 const result = dotenv.config();
+const path = require('path');
+const loginRouter = require('./routes/login');
 if (result.error) throw result.error;
 const env = app.get('env');
 debug('NODE_ENV: ', env);
 
 app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.send('works');
-});
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use('/', loginRouter);
 
 mongoose.connect(
     `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
