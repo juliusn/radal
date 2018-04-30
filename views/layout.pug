@@ -1,7 +1,9 @@
-doctype html
-html
-  head
-    title Radal
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+extends ../node_modules/pug-bootstrap/_bootstrap
+append styles
+  // Bootstrap theme
+  link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css")
+  // Custom styles for this template
+  link(href='../css/theme.css', rel='stylesheet')
+
+block body
+  block content
