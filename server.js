@@ -16,7 +16,8 @@ debug('NODE_ENV: ', env);
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/css', express.static(path.join(__dirname, '/node_modules/pug-bootstrap/css')))
+app.use('/css',
+    express.static(path.join(__dirname, '/node_modules/pug-bootstrap/css')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use('/', loginRouter);
