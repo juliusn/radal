@@ -2,7 +2,7 @@ window.fbAsyncInit = () => {
   FB.init({
     appId: '152386338928593',
     cookie: true,
-    xfbml: true,
+    xfbml: false,
     version: 'v2.12',
   });
 
@@ -22,6 +22,6 @@ window.fbAsyncInit = () => {
   }
   js = d.createElement(s);
   js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js';
+  js.src = 'https://connect.facebook.net/en_US/sdk/debug.js';
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
