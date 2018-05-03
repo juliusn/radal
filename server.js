@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const result = dotenv.config();
 const path = require('path');
 const loginRouter = require('./routes/login');
+const authRouter = require('./routes/authenticate');
+const mapRouter = require('./routes/map');
 if (result.error) throw result.error;
 const env = app.get('env');
 const dev = env !== 'production';
@@ -20,7 +22,9 @@ app.use('/css',
     express.static(path.join(__dirname, '/node_modules/pug-bootstrap/css')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use('/', loginRouter);
+app.use('/login', loginRouter);
+app.use('/authenticate', authRouter);
+app.use('/map', mapRouter);
 
 mongoose.connect(
     `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).

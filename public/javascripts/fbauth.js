@@ -7,6 +7,11 @@ window.fbAsyncInit = () => {
   });
 
   FB.AppEvents.logPageView();
+
+  FB.getLoginStatus(function(response) {
+    console.log(response);
+    if (response.status === 'unknown') window.location.replace('/login');
+  });
 };
 
 (function(d, s, id) {
