@@ -1,7 +1,0 @@
-extends layout
-
-block body
-
-  - const fbInitSrc = `../javascripts/${(locals.settings.env === 'development') ? 'fbinitdebug.js' : 'fbinit.js'}`
-  script(src=fbInitSrc)
-  block content

@@ -4,7 +4,10 @@ append styles
   link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css")
   // Custom styles for this template
   link(href='../css/theme.css', rel='stylesheet')
+  link(href='/stylesheets/style.css', rel='stylesheet')
 
 block body
-  block content
-  p3= locals.settings.env
+  .container
+    block content
+    .text-center
+      p= `© 2018 Julius Niiniranta. App environment is in ${locals.settings.env} mode.`
