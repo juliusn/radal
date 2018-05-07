@@ -70,11 +70,9 @@ block body
           script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
           async=true,
           defer=true)
+
       div.collapse#markerComposer
-        form
-          .form-group
-            label(for='markerDescription') Marker Description
-            textarea.form-control#markerDescription(rows=5, cols=3)
+        include geotagComposer
 
 
       div.nav-container

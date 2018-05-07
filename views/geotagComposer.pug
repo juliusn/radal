@@ -1,0 +1,30 @@
+form#geotagComposer(method='POST', enctype='multipart/form-data')
+  .form-group
+    div.select-dropdown
+      select
+        option Select Emoji:
+        script(src='/javascripts/emoji.js')
+        script(src='/javascripts/select-dropdown.js')
+
+    label(for='markerDescription') Write Description
+    textarea.form-control#markerDescription(rows=3)
+    button.btn.btn-primary.button-submit(type='submit') Submit
+
+  script.
+    const form = document.querySelector('#geotagComposer');
+    form.addEventListener('submit', function(submitEvent) {
+      submitEvent.preventDefault();
+      const formData = new FormData(form);
+      const request = new XMLHttpRequest();
+
+      request.onload = function(ev) {
+        if (request.status === 200) {
+          uploadForm.reset();
+          alert('OK');
+        } else {
+          alert(request.statusText);
+        }
+      };
+      request.open('POST', '/geotags', true);
+      request.send(formData);
+    });
