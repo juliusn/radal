@@ -20,14 +20,17 @@ block body
                 center: latLng,
                 zoom: 16,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
-                disableDefaultUI: true
+                disableDefaultUI: true,
+                draggable: false
               });
 
               let marker = new google.maps.Marker({
                 position: latLng,
                 icon: {
                   path: google.maps.SymbolPath.CIRCLE,
-                  scale: 8
+                  scale: 6,
+                  strokeColor: '#4267b2',
+                  strokeWeight: 4
                 },
                 draggable: false,
                 map: map
@@ -67,8 +70,13 @@ block body
           script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
           async=true,
           defer=true)
+      div.collapse#markerComposer
+        form
+          .form-group
+            label(for='markerDescription') Marker Description
+            textarea.form-control#markerDescription(rows=5, cols=3)
+
+
       div.nav-container
-        div 1
-        div 2
-        div 3
+        a.btn.btn-primary(data-toggle="collapse" href="#markerComposer" role="button" aria-expanded="false" aria-controls="markerComposer") +
 
