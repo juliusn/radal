@@ -1,4 +1,22 @@
-extends uses-fb-sdk
+extends ../node_modules/pug-bootstrap/_bootstrap
 
-block content
-  p1 map
+append styles
+  // link(href='../pug-bootstrap/css/theme.css', rel='stylesheet')
+  link(href='/stylesheets/style.css', rel='stylesheet')
+
+block body
+  .container.map-container
+    .row.map-container
+      .col-md-12.map-container
+        div#map
+          script.
+            let map;
+            function initMap() {
+              map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8,
+              });
+            }
+          script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
+          async=true,
+          defer=true)

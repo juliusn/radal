@@ -1,13 +1,19 @@
 extends ../node_modules/pug-bootstrap/_bootstrap
 append styles
   // Bootstrap theme
-  link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css")
+  // link(href="/bootstrap/dist/css/bootstrap.css", rel="stylesheet")
+  // link(href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet")
   // Custom styles for this template
-  link(href='../css/theme.css', rel='stylesheet')
+  link(href='../pug-bootstrap/css/theme.css', rel='stylesheet')
   link(href='/stylesheets/style.css', rel='stylesheet')
 
 block body
+  // p= `© 2018 Julius Niiniranta. App environment is in ${locals.settings.env} mode.`
   .container
-    block content
-    .text-center
-      p= `© 2018 Julius Niiniranta. App environment is in ${locals.settings.env} mode.`
+    .row
+      .col-md
+        p col
+      .col-md
+        p col
+      .col-md
+        p col
