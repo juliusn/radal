@@ -226,7 +226,7 @@ block body
                 });
 
                 google.maps.event.addListener(GeoMarker, 'geolocation_error', function(e) {
-                  alert('There was an error obtaining your position:' + 'e.message');
+                  alert('There was an error obtaining your position:' + e.message);
                 });
 
                 GeoMarker.setMap(map);
