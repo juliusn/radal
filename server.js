@@ -29,8 +29,8 @@ mongoose.connect(
     `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
     then(() => {
       debug('Database connected!');
-      let httpPort = !dev ? 80 : 8080;
-      let httpsPort = !dev ? 443 : 3000;
+      let httpPort = 8080;
+      let httpsPort = 8443;
       if (dev) {
         const fs = require('fs');
         const sslkey = fs.readFileSync('ssl-key.pem');
@@ -41,13 +41,16 @@ mongoose.connect(
         };
         https.createServer(options, app).listen(httpsPort);
         debug('HTTPS server up listening ' + httpsPort);
-        http.createServer((req, res) => {
-          res.writeHead(301,
-              {'Location': 'https://localhost:' + httpsPort + req.url});
-          res.end();
-          debug('HTTP requests will be redirected over HTTPS to ' + httpsPort);
-        }).listen(httpPort);
-        debug('HTTP server up listening ' + httpPort);
+        const redirectHttp = () => {
+          http.createServer((req, res) => {
+            res.writeHead(301,
+                {'Location': 'https://localhost:' + httpsPort + req.url});
+            res.end();
+            debug('HTTP requests will be redirected over HTTPS to ' +
+                httpsPort);
+          }).listen(httpPort);
+          debug('HTTP server up listening ' + httpPort);
+        };
       } else {
         app.enable('trust proxy');
         app.use((req, res, next) => {
@@ -57,7 +60,7 @@ mongoose.connect(
             res.redirect('https://' + req.headers.host + req.url);
           }
         });
-        app.listen(3000);
+        app.listen(httpsPort);
       }
     }, (err) => {
       debug(err.message);
