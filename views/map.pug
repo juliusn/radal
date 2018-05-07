@@ -6,58 +6,69 @@ append styles
 
 block body
   .container.fill-vertically
-    .row.fill-vertically
-      .fill-vertically.mapui-container
-        .map-container
-          #spinner
-          div#map
-            script.
+    .row.fill-vertically.mapui-container
+      .map-container
+        #spinner
+        div#map
+          script.
 
-              let map;
+            let map;
 
-              function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                  center: {lat: -34.397, lng: 150.644},
-                  zoom: 16,
-                  mapTypeId: google.maps.MapTypeId.ROADMAP,
-                  disableDefaultUI: true
-                });
+            function initMap() {
+              let latLng = new google.maps.LatLng(-34.397, 150.644);
+              map = new google.maps.Map(document.getElementById('map'), {
+                center: latLng,
+                zoom: 16,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true
+              });
 
-                updateCurrentLocation();
+              let marker = new google.maps.Marker({
+                position: latLng,
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 8
+                },
+                draggable: false,
+                map: map
+              });
 
-                function updateCurrentLocation() {
-                  try {
-                    let watchId = navigator.geolocation.watchPosition(updateMap, handleLocationError);
-                  } catch (e) {
-                    alert(e.message);
-                  }
-                }
+              updateCurrentLocation();
 
-                function handleLocationError(error) {
-                  alert(error.message);
-                }
-
-                function updateMap(position) {
-                  let pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                  };
-                  hideSpinner();
-                  map.panTo(pos);
-                }
-
-                function hideSpinner() {
-                  let spinner = document.querySelector('#spinner');
-                  if (spinner) spinner.parentNode.removeChild(spinner);
+              function updateCurrentLocation() {
+                try {
+                  let watchId = navigator.geolocation.watchPosition(updateMap, handleLocationError);
+                } catch (e) {
+                  alert(e.message);
                 }
               }
 
+              function handleLocationError(error) {
+                alert(error.message);
+              }
 
-            script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
-            async=true,
-            defer=true)
-        div.nav-container
-          div 1
-          div 2
-          div 3
+              function updateMap(position) {
+                hideSpinner();
+                latLng = new google.maps.LatLng(
+                    position.coords.latitude,
+                    position.coords.longitude);
+
+                marker.setPosition(latLng);
+                map.panTo(latLng);
+              }
+
+              function hideSpinner() {
+                let spinner = document.querySelector('#spinner');
+                if (spinner) spinner.parentNode.removeChild(spinner);
+              }
+            };
+
+
+          script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
+          async=true,
+          defer=true)
+      div.nav-container
+        div 1
+        div 2
+        div 3
 
