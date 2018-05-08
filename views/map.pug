@@ -10,71 +10,21 @@ block body
       .map-container
         #spinner
         div#map
-          script.
 
-            let map;
+      #collapsibles
+        div.collapse#markerComposer
+          include geotagComposer
 
-            function initMap() {
-              let latLng = new google.maps.LatLng(-34.397, 150.644);
-              map = new google.maps.Map(document.getElementById('map'), {
-                center: latLng,
-                zoom: 16,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                disableDefaultUI: true,
-                draggable: false
-              });
-
-              let marker = new google.maps.Marker({
-                position: latLng,
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 6,
-                  strokeColor: '#4267b2',
-                  strokeWeight: 4
-                },
-                draggable: false,
-                map: map
-              });
-
-              updateCurrentLocation();
-
-              function updateCurrentLocation() {
-                try {
-                  let watchId = navigator.geolocation.watchPosition(updateMap, handleLocationError);
-                } catch (e) {
-                  alert(e.message);
-                }
-              }
-
-              function handleLocationError(error) {
-                alert(error.message);
-              }
-
-              function updateMap(position) {
-                hideSpinner();
-                latLng = new google.maps.LatLng(
-                    position.coords.latitude,
-                    position.coords.longitude);
-
-                marker.setPosition(latLng);
-                map.panTo(latLng);
-              }
-
-              function hideSpinner() {
-                let spinner = document.querySelector('#spinner');
-                if (spinner) spinner.parentNode.removeChild(spinner);
-              }
-            };
-
-
-          script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
-          async=true,
-          defer=true)
-
-      div.collapse#markerComposer
-        include geotagComposer
-
+        div.collapse#userEmojiSelect
+          include userEmojiSelect
 
       div.nav-container
-        a.btn.btn-primary(data-toggle="collapse" href="#markerComposer" role="button" aria-expanded="false" aria-controls="markerComposer") +
+        a.btn.btn-primary.nav-toggle(href='#markerComposer', role='button') +
+        a.btn.btn-primary.nav-toggle(href='#userEmojiSelect', role='button') E
 
+append scripts
+  script(src='/javascripts/initmap.js')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBLG03RG4vdnPx0B6NTRsZOOtmNb6kfA8E&callback=initMap',
+  async=true,
+  defer=true)
+  script(src='/javascripts/nav-actions.js')
