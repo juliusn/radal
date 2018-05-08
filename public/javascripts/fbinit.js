@@ -2,7 +2,7 @@ const statusChangeCallback = (response) => {
   console.log('statusChangeCallback', response);
   switch (response.status) {
     case 'connected':
-      console.log(response.authResponse);
+      console.log('connected');
       break;
     case 'not_authorized':
       console.log('connected, not authorized');

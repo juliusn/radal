@@ -2,13 +2,23 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   name: String,
-  userId: String,
-  updated: {
+  userid: String,
+  updated_at: {
     type: Date,
     default: Date.now(),
   },
 });
 
-UserSchema.statics.findOrCreate = require('find-or-create');
+UserSchema.statics.findOneOrCreate = function findOneOrCreate(
+    condition, doc, callback) {
+  const self = this;
+  self.findOne(condition, (err, result) => {
+    return result ?
+        callback(err, result) :
+        self.create(doc, (err, result) => {
+          return callback(err, result);
+        });
+  });
+};
 
 module.exports = mongoose.model('User', UserSchema);

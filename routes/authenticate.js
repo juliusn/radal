@@ -14,9 +14,9 @@ router.get('/logout', (req, res) => {
 router.get('/', strategyFacebook.authenticate('facebook'));
 
 router.get('/authcallback',
-    strategyFacebook.authenticate('facebook', {failureRedirect: '/login'}),
-    (req, res) => {
-      res.redirect('/');
-    });
+    strategyFacebook.authenticate('facebook', {
+      successRedirect: '/',
+      failureRedirect: '/authenticate',
+    }));
 
 module.exports = router;

@@ -4,7 +4,7 @@ const logger = require('morgan');
 const debug = require('debug')('http');
 const https = require('https');
 const app = express();
-const session = require('express-session');
+const expressSession = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const result = dotenv.config();
@@ -25,15 +25,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/pug-bootstrap',
     express.static(path.join(__dirname, '/node_modules/pug-bootstrap')));
 
-app.use('/authenticate', authRouter);
-app.use('/', mapRouter);
-app.use(session({
+app.use(expressSession({
   secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/authenticate', authRouter);
+app.use('/', mapRouter);
 
 mongoose.connect(dbstring).
     then(() => {
