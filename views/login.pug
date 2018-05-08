@@ -1,14 +1,22 @@
-extends layout
+extends ../node_modules/pug-bootstrap/_bootstrap
 
-block content
+block body
 
   div#fb-root
 
     script.
       function statusChangeCallback(response) {
         console.log('statusChangeCallback', response);
-        if (response.status === 'connected') {
-
+        switch (response.status) {
+          case 'connected':
+            console.log(response.authResponse);
+            break;
+          case 'not_authorized':
+            console.log('connected, not authorized');
+            break;
+          case 'unknown':
+            console.log('not connected');
+            break;
         }
       }
 
