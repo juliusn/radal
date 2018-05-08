@@ -76,22 +76,6 @@ html, body, .fill-vertically {
     cursor: pointer;
 }
 
-.select-header:after {
-    position: absolute;
-    content: "";
-    top: 14px;
-    right: 0px;
-    width: 0;
-    height: 0;
-    border: 6px solid transparent;
-    border-color: #fff transparent transparent transparent;
-}
-
-.select-header.select-arrow-active:after {
-    border-color: transparent transparent #fff transparent;
-    top: 7px;
-}
-
 .select-selected {
     display: inline-block;
     background-color: #646464;

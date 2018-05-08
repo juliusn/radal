@@ -15,7 +15,6 @@ document.querySelectorAll('.select-dropdown').forEach((dd) => {
   header.addEventListener('click', (ev) => {
     ev.stopPropagation();
     header.nextSibling.classList.toggle('select-hide');
-    header.classList.toggle('select-arrow-active');
   });
   dd.appendChild(header);
   // dd.style.width = dd.offsetWidth + 20 + 'px';
