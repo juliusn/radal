@@ -11,20 +11,20 @@ const statusChangeCallback = (response) => {
       console.log('not connected');
       break;
   }
-}
+};
 
 const finishedRendering = () => {
   const spinner = document.querySelector('#spinner');
   spinner.removeAttribute('style');
   spinner.parentNode.removeChild(spinner);
-}
+};
 
 window.fbAsyncInit = () => {
   FB.init({
     appId: '152386338928593',
     cookie: true,
     xfbml: true,
-    version: 'v2.12'
+    version: 'v2.12',
   });
 
   finishedRendering();
@@ -32,7 +32,7 @@ window.fbAsyncInit = () => {
   FB.getLoginStatus(statusChangeCallback);
 };
 
-((d, s, id) => {
+(function(d, s, id) {
   let js;
   let fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {

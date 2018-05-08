@@ -2,35 +2,43 @@ const dotenv = require('dotenv');
 const express = require('express');
 const logger = require('morgan');
 const debug = require('debug')('http');
-const http = require('http');
 const https = require('https');
 const app = express();
+const session = require('express-session');
+const passport = require('passport');
 const mongoose = require('mongoose');
 const result = dotenv.config();
 const path = require('path');
-const loginRouter = require('./routes/login');
+const authRouter = require('./routes/authenticate');
 const mapRouter = require('./routes/map');
 if (result.error) throw result.error;
 const env = app.get('env');
 const dev = env !== 'production';
 debug('NODE_ENV: ', env);
+const dbstring = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`;
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/pug-bootstrap',
     express.static(path.join(__dirname, '/node_modules/pug-bootstrap')));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
-app.use('/login', loginRouter);
+app.use('/authenticate', authRouter);
 app.use('/', mapRouter);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-mongoose.connect(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`).
+mongoose.connect(dbstring).
     then(() => {
       debug('Database connected!');
-      let httpPort = 8080;
-      let httpsPort = 8443;
+      const httpsPort = 8443;
       if (dev) {
         const fs = require('fs');
         const sslkey = fs.readFileSync('ssl-key.pem');
@@ -41,16 +49,6 @@ mongoose.connect(
         };
         https.createServer(options, app).listen(httpsPort);
         debug('HTTPS server up listening ' + httpsPort);
-        const redirectHttp = () => {
-          http.createServer((req, res) => {
-            res.writeHead(301,
-                {'Location': 'https://localhost:' + httpsPort + req.url});
-            res.end();
-            debug('HTTP requests will be redirected over HTTPS to ' +
-                httpsPort);
-          }).listen(httpPort);
-          debug('HTTP server up listening ' + httpPort);
-        };
       } else {
         app.enable('trust proxy');
         app.use((req, res, next) => {
