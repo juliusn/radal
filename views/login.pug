@@ -4,56 +4,7 @@ block body
 
   div#fb-root
 
-    script.
-      function statusChangeCallback(response) {
-        console.log('statusChangeCallback', response);
-        switch (response.status) {
-          case 'connected':
-            console.log(response.authResponse);
-            break;
-          case 'not_authorized':
-            console.log('connected, not authorized');
-            break;
-          case 'unknown':
-            console.log('not connected');
-            break;
-        }
-      }
-
-      function finishedRendering() {
-        const spinner = document.querySelector('#spinner');
-        spinner.removeAttribute('style');
-        spinner.parentNode.removeChild(spinner);
-      }
-
-      window.fbAsyncInit = function() {
-        console.log('initializing FB SDK');
-        FB.init({
-          appId: '152386338928593',
-          cookie: true,
-          xfbml: true,
-          version: 'v2.12'
-        });
-
-        finishedRendering();
-
-        FB.getLoginStatus(function(response) {
-          console.log('FB SDK initialized', response);
-          statusChangeCallback(response);
-        });
-      };
-
-      (function(d, s, id) {
-        let js;
-        let fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk/debug.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
+    script(src='/javascripts/fbinit.js')
 
     .text-center
 
@@ -67,4 +18,3 @@ block body
         data-show-faces='false',
         data-auto-logout-link='true',
         data-use-continue-as='false')
-

@@ -1,24 +1,25 @@
 const statusChangeCallback = (response) => {
-  if (response.status === 'connected') {
-    testAPI();
+  console.log('statusChangeCallback', response);
+  switch (response.status) {
+    case 'connected':
+      console.log(response.authResponse);
+      break;
+    case 'not_authorized':
+      console.log('connected, not authorized');
+      break;
+    case 'unknown':
+      console.log('not connected');
+      break;
   }
 }
 
-const checkLoginState = () => {
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
-}
-
 const finishedRendering = () => {
-  console.log('finished rendering plugins');
-  const spinner = document.getElementById('spinner');
+  const spinner = document.querySelector('#spinner');
   spinner.removeAttribute('style');
-  spinner.removeChild(spinner.childNodes[0]);
+  spinner.parentNode.removeChild(spinner);
 }
 
-window.fbAsyncInit = function() {
-  console.log('initializing FB SDK');
+window.fbAsyncInit = () => {
   FB.init({
     appId: '152386338928593',
     cookie: true,
@@ -26,11 +27,9 @@ window.fbAsyncInit = function() {
     version: 'v2.12'
   });
 
-  FB.getLoginStatus(function(response) {
-    console.log('FB SDK initialized', response);
-    finishedRendering();
-    statusChangeCallback(response);
-  });
+  finishedRendering();
+
+  FB.getLoginStatus(statusChangeCallback);
 };
 
 ((d, s, id) => {
