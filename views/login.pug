@@ -1,24 +1,11 @@
 extends ../node_modules/pug-bootstrap/_bootstrap
 
+append styles
+  link(href='/stylesheets/style.css', rel='stylesheet')
+
 block body
-  .main.container
-    .row
-      .col-md-6.col-md-offset-3
-        div#fb-root
+  .container.fill-vertically
+    .centered.text-center
+      h5.display-4.m-b-2= title
+      a.btn.btn-primary(href='/authenticate') Log In
 
-        // script(src='/javascripts/fbinit.js')
-
-        .text-center
-          h4.display-4.m-b-2= title
-          a.btn.btn-primary(href='/authenticate') Log In
-
-          .spinner#spinner
-
-          //div.fb-login-button(
-          //  data-width='300',
-          //  data-max-rows='1',
-          //  data-size='large',
-          //  data-button-type='continue_with',
-          //  data-show-faces='false',
-          //  data-auto-logout-link='true',
-          //  data-use-continue-as='true')

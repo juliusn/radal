@@ -3,7 +3,8 @@ function initMap() {
   let latLng;
   let map;
   let marker;
-  let positionKnown = false;
+  let mapEnabled = false;
+  let mapElmnt = document.getElementById('map');
 
   updateCurrentLocation();
 
@@ -21,7 +22,6 @@ function initMap() {
   }
 
   function updateMap(position) {
-    if (!positionKnown) enablePositionUi();
     latLng = new google.maps.LatLng(
         position.coords.latitude,
         position.coords.longitude);
@@ -29,7 +29,7 @@ function initMap() {
     if (map) {
       map.panTo(latLng);
     } else {
-      map = new google.maps.Map(document.getElementById('map'), {
+      map = new google.maps.Map(mapElmnt, {
         center: latLng,
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -53,15 +53,6 @@ function initMap() {
         map: map,
       });
     }
-  }
-
-  function enablePositionUi() {
-    let info = document.querySelector('#overlay-info');
-    info.parentNode.removeChild(info);
-    let overlay = document.querySelector('#disabling-overlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.parentNode.removeChild(overlay);
-    }, 1000);
+    if (!mapEnabled) enableMapUI();
   }
 }

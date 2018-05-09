@@ -1,7 +1,6 @@
 extends ../node_modules/pug-bootstrap/_bootstrap
 
 append styles
-  // link(href='../pug-bootstrap/css/theme.css', rel='stylesheet')
   link(href='/stylesheets/style.css', rel='stylesheet')
 
 block body
@@ -10,18 +9,32 @@ block body
     const domain = '!{backend}';
     const socket = io.connect(domain);
 
+    function enableMapUI() {
+      let info = document.querySelector('#overlay-info');
+      let spinner = info.querySelector('.spinner');
+      spinner.parentNode.removeChild(spinner);
+      info.querySelector('.message').innerText = 'Found You!';
+      info.style.opacity = '0';
+      setTimeout(function() {
+        info.parentNode.removeChild(info);
+        }, 2400);
+      let buttons = document.querySelectorAll('.nav-toggle.disabled');
+      buttons.forEach(function(button) {
+        button.classList.remove('disabled');
+      })
+      mapEnabled = true;
+    }
+
   .container.fill-vertically
     .row.fill-vertically.mapui-container
 
-      #disabling-overlay.opacity-fade(onclick='return false')
-
-      .centered.text-center#overlay-info
+      #overlay-info.centered.text-center.opacity-fade
         .spinner
-        h5 Finding Your Location, Please Wait...
+        h5.message Finding Your Location, Please Wait...
 
-      .map-container.text-center
+      .map-container
 
-        div#map
+        div#map.opacity-fade
 
       #collapsibles
 
@@ -39,9 +52,9 @@ block body
         a.btn.btn-primary.nav-toggle(href='#userInfo', role='button')
           span.glyphicon.glyphicon-user
 
-        a.btn.btn-primary.nav-toggle(href='#userEmojiSelect', role='button') 😀
+        a.btn.btn-primary.nav-toggle.disabled(href='#userEmojiSelect', role='button') 😀
 
-        a.btn.btn-primary.nav-toggle(href='#geotagComposer', role='button')
+        a.btn.btn-primary.nav-toggle.disabled(href='#geotagComposer', role='button')
           span.glyphicon.glyphicon-map-marker
 
 

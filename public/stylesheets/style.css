@@ -30,7 +30,7 @@
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
-    border: 6px solid #f3f3f3;
+    border: 6px solid #dfdfdf;
     border-top: 6px solid #4267b2;
     border-radius: 50%;
     width: 40px;
@@ -40,8 +40,12 @@
 
 .opacity-fade {
     opacity: 1;
-    -webkit-transition: opacity 1000ms linear;
-    transition: opacity 1000ms linear;
+    -webkit-transition: opacity 2400ms linear;
+    transition: opacity 2400ms linear;
+}
+
+.invisible {
+    opacity: 0;
 }
 
 @keyframes spin {
@@ -79,7 +83,12 @@ html, body, .fill-vertically {
     min-height: 40px;
     justify-content: center;
     align-items: center;
-    background-color: #4267b2;
+    background-color: #e6e6e6;
+}
+
+.nav-container > a {
+    font-size: 20px;
+    margin: 3px;
 }
 
 .ui-content {
