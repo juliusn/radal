@@ -20,6 +20,7 @@
   "homepage": "https://github.com/juliusn/radal-server#readme",
   "dependencies": {
     "bootstrap-social": "^5.1.1",
+    "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "debug": "^3.1.0",
     "dotenv": "^5.0.1",
@@ -31,6 +32,7 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
+    "passport.socketio": "^3.7.0",
     "pug": "^2.0.3",
     "pug-bootstrap": "0.0.15",
     "socket.io": "^2.1.0",

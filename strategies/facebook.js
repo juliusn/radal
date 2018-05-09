@@ -16,8 +16,8 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(new FacebookStrategy({
-  clientID: '152386338928593',
-  clientSecret: 'a4d1622d812f37109a2b980596a135bb',
+  clientID: process.env.APP_ID,
+  clientSecret: process.env.APP_SECRET,
   callbackURL: callbackURL,
 }, (accessToken, refreshToken, profile, done) => {
   const query = {userid: profile.id};

@@ -16,8 +16,8 @@ router.get('/', strategyFacebook.authenticate('facebook'));
 
 router.get('/authcallback',
     strategyFacebook.authenticate('facebook', {
-      successRedirect: '/',
-      failureRedirect: '/authenticate',
+      successRedirect: '/map',
+      failureRedirect: '/error',
     }));
 
 module.exports = router;

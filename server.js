@@ -6,16 +6,9 @@ const debug = require('debug')('http');
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
-const expressSession = require('express-session');
-const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
-const authRouter = require('./routes/authenticate');
-const mapRouter = require('./routes/map');
-const env = app.get('env');
-const dev = env !== 'production';
-debug('NODE_ENV: ', env);
-const dbstring = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`;
+const dev = app.get('env') !== 'production';
 app.use(helmet());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -25,20 +18,39 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/pug-bootstrap',
     express.static(path.join(__dirname, '/node_modules/pug-bootstrap')));
 
-app.use(expressSession({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use('/authenticate', authRouter);
-app.use('/', mapRouter);
+const dbstring = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`;
 
 mongoose.connect(dbstring).
     then(() => {
       debug('Database connected!');
+      const cookieParser = require('cookie-parser');
+      app.use(cookieParser(process.env.SESSION_SECRET));
+      const session = require('express-session');
+      const MongoStore = require('connect-mongo')(session);
+      const sessionStore = new MongoStore(
+          {mongooseConnection: mongoose.connection});
+      app.use(session({
+        secret: process.env.SESSION_SECRET,
+        store: sessionStore,
+        resave: true,
+        saveUninitialized: true,
+        proxy: true,
+        cookie: {
+          secure: !dev,
+          maxAge: 2419200000,
+        },
+      }));
+      const passport = require('passport');
+      app.use(passport.initialize());
+      app.use(passport.session());
+
+      const passportSocketIo = require('passport.socketio');
+
+      app.use('/', require('./routes/authenticate'));
+      app.use('/authenticate', require('./routes/authenticate'));
+      app.use('/map', require('./routes/map'));
+      app.use('/error', require('./routes/error'));
+
       const port = 8443;
       if (dev) {
         const fs = require('fs');
@@ -49,12 +61,22 @@ mongoose.connect(dbstring).
           cert: sslcert,
         };
         const server = require('https').createServer(options, app);
-        const io = require('socket.io')(server);
         server.listen(port, () => {
           debug('Server up listening on ' + port);
         });
+        const io = require('socket.io')(server);
+        io.use(passportSocketIo.authorize({
+          key: 'connect.sid',
+          secret: process.env.SESSION_SECRET,
+          store: sessionStore,
+          passport: passport,
+          cookieParser: cookieParser,
+        }));
         io.on('connection', (socket) => {
           debug(socket.id, 'connected');
+          socket.on('emojiSelect', (data) => {
+            debug(data);
+          });
         });
       } else {
         app.enable('trust proxy');
