@@ -1,25 +1,20 @@
-const dotenv = require('dotenv');
-const result = dotenv.config();
-if (result.error) throw result.error;
-const logger = require('morgan');
+if (require('dotenv').config().error) throw result.error;
 const debug = require('debug')('http');
 const express = require('express');
 const app = express();
-const helmet = require('helmet');
-const mongoose = require('mongoose');
 const path = require('path');
-const dev = app.get('env') !== 'production';
-app.use(helmet());
+const prod = app.get('env') === 'production';
+app.use(require('helmet')());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+app.use(require('morgan')('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/pug-bootstrap',
     express.static(path.join(__dirname, '/node_modules/pug-bootstrap')));
 
 const dbstring = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`;
-
+const mongoose = require('mongoose');
 mongoose.connect(dbstring).
     then(() => {
       debug('Database connected!');
@@ -36,7 +31,7 @@ mongoose.connect(dbstring).
         saveUninitialized: true,
         proxy: true,
         cookie: {
-          secure: !dev,
+          secure: prod,
           maxAge: 2419200000,
         },
       }));
@@ -54,7 +49,7 @@ mongoose.connect(dbstring).
       let server;
 
       const port = 8443;
-      if (dev) {
+      if (!prod) {
         const fs = require('fs');
         const options = {
           key: fs.readFileSync('ssl-key.pem'),
@@ -64,11 +59,8 @@ mongoose.connect(dbstring).
       } else {
         app.enable('trust proxy');
         app.use((req, res, next) => {
-          if (req.secure) {
-            next();
-          } else {
-            res.redirect('https://' + req.headers.host + req.url);
-          }
+          if (req.secure) return next();
+          res.redirect('https://' + req.headers.host + req.url);
         });
         server = require('http').createServer(app);
       }
@@ -100,7 +92,6 @@ mongoose.connect(dbstring).
       server.listen(port, () => {
         debug('Server up listening on ' + port);
       });
-
     }, (err) => {
       debug(err.message);
     });
