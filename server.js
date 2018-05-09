@@ -73,9 +73,17 @@ mongoose.connect(dbstring).
           cookieParser: cookieParser,
         }));
         io.on('connection', (socket) => {
+          const User = require('./models/User');
           debug(socket.id, 'connected');
           socket.on('emojiSelect', (data) => {
-            debug(data);
+            User.findById(socket.request.user._id, (err, user) => {
+              if (err) debug(err.message);
+              if (user) debug(user);
+              user.emoji = data.emoji;
+              user.save((err) => {
+                if (err) debug(err.message);
+              });
+            });
           });
         });
       } else {
