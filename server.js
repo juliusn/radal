@@ -51,41 +51,16 @@ mongoose.connect(dbstring).
       app.use('/map', require('./routes/map'));
       app.use('/error', require('./routes/error'));
 
+      let server;
+
       const port = 8443;
       if (dev) {
         const fs = require('fs');
-        const sslkey = fs.readFileSync('ssl-key.pem');
-        const sslcert = fs.readFileSync('ssl-cert.pem');
         const options = {
-          key: sslkey,
-          cert: sslcert,
+          key: fs.readFileSync('ssl-key.pem'),
+          cert: fs.readFileSync('ssl-cert.pem'),
         };
-        const server = require('https').createServer(options, app);
-        server.listen(port, () => {
-          debug('Server up listening on ' + port);
-        });
-        const io = require('socket.io')(server);
-        io.use(passportSocketIo.authorize({
-          key: 'connect.sid',
-          secret: process.env.SESSION_SECRET,
-          store: sessionStore,
-          passport: passport,
-          cookieParser: cookieParser,
-        }));
-        io.on('connection', (socket) => {
-          const User = require('./models/User');
-          debug(socket.id, 'connected');
-          socket.on('emojiSelect', (data) => {
-            User.findById(socket.request.user._id, (err, user) => {
-              if (err) debug(err.message);
-              if (user) debug(user);
-              user.emoji = data.emoji;
-              user.save((err) => {
-                if (err) debug(err.message);
-              });
-            });
-          });
-        });
+        server = require('https').createServer(options, app);
       } else {
         app.enable('trust proxy');
         app.use((req, res, next) => {
@@ -95,8 +70,37 @@ mongoose.connect(dbstring).
             res.redirect('https://' + req.headers.host + req.url);
           }
         });
-        app.listen(port);
+        server = require('http').createServer(app);
       }
+
+      const io = require('socket.io')(server);
+      io.use(passportSocketIo.authorize({
+        key: 'connect.sid',
+        secret: process.env.SESSION_SECRET,
+        store: sessionStore,
+        passport: passport,
+        cookieParser: cookieParser,
+      }));
+
+      io.on('connection', (socket) => {
+        const User = require('./models/User');
+        debug(socket.id, 'connected');
+        socket.on('emojiSelect', (data) => {
+          User.findById(socket.request.user._id, (err, user) => {
+            if (err) debug(err.message);
+            if (user) debug(user);
+            user.emoji = data.emoji;
+            user.save((err) => {
+              if (err) debug(err.message);
+            });
+          });
+        });
+      });
+
+      server.listen(port, () => {
+        debug('Server up listening on ' + port);
+      });
+
     }, (err) => {
       debug(err.message);
     });
