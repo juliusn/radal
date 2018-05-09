@@ -1,18 +1,17 @@
 const dotenv = require('dotenv');
-const express = require('express');
+const result = dotenv.config();
+if (result.error) throw result.error;
 const logger = require('morgan');
 const debug = require('debug')('http');
-const https = require('https');
+const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const expressSession = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const result = dotenv.config();
 const path = require('path');
 const authRouter = require('./routes/authenticate');
 const mapRouter = require('./routes/map');
-if (result.error) throw result.error;
 const env = app.get('env');
 const dev = env !== 'production';
 debug('NODE_ENV: ', env);
@@ -40,7 +39,7 @@ app.use('/', mapRouter);
 mongoose.connect(dbstring).
     then(() => {
       debug('Database connected!');
-      const httpsPort = 8443;
+      const port = 8443;
       if (dev) {
         const fs = require('fs');
         const sslkey = fs.readFileSync('ssl-key.pem');
@@ -49,8 +48,14 @@ mongoose.connect(dbstring).
           key: sslkey,
           cert: sslcert,
         };
-        https.createServer(options, app).listen(httpsPort);
-        debug('HTTPS server up listening ' + httpsPort);
+        const server = require('https').createServer(options, app);
+        const io = require('socket.io')(server);
+        server.listen(port, () => {
+          debug('Server up listening on ' + port);
+        });
+        io.on('connection', (socket) => {
+          debug(socket.id, 'connected');
+        });
       } else {
         app.enable('trust proxy');
         app.use((req, res, next) => {
@@ -60,7 +65,7 @@ mongoose.connect(dbstring).
             res.redirect('https://' + req.headers.host + req.url);
           }
         });
-        app.listen(httpsPort);
+        app.listen(port);
       }
     }, (err) => {
       debug(err.message);

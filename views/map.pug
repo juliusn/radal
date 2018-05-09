@@ -5,6 +5,11 @@ append styles
   link(href='/stylesheets/style.css', rel='stylesheet')
 
 block body
+  script(src='/socket.io/socket.io.js')
+  script.
+    const domain = '!{backend}';
+    const socket = io.connect(domain);
+
   .container.fill-vertically
     .row.fill-vertically.mapui-container
       .map-container
@@ -16,9 +21,15 @@ block body
         div.collapse#userInfo
           include userInfo
 
+        div.collapse#userEmojiSelect
+          include userEmojiSelect
+
       div.nav-container
         a.btn.btn-primary.nav-toggle(href='#userInfo', role='button')
           span.glyphicon.glyphicon-user
+
+        a.btn.btn-primary.nav-toggle(href='#userEmojiSelect', role='button') 😀
+
 
 append scripts
   script(src='/javascripts/initmap.js')
@@ -26,3 +37,5 @@ append scripts
   async=true,
   defer=true)
   script(src='/javascripts/nav-actions.js')
+  script(src='/javascripts/emoji.js')
+  script(src='/javascripts/emoji-select.js')
