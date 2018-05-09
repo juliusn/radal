@@ -1,6 +1,9 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const User = require('../models/User');
+const url = require('url');
+const callbackURL = url.resolve(process.env.APP_DOMAIN,
+    '/authenticate/authcallback');
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -15,7 +18,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new FacebookStrategy({
   clientID: '152386338928593',
   clientSecret: 'a4d1622d812f37109a2b980596a135bb',
-  callbackURL: 'https://radal.jelastic.metropolia.fi/authenticate/authcallback',
+  callbackURL: callbackURL,
 }, (accessToken, refreshToken, profile, done) => {
   const query = {userid: profile.id};
   const doc = {

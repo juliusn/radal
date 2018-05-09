@@ -54,6 +54,10 @@ html, body, .fill-vertically {
     background-color: #4267b2;
 }
 
+.ui-content {
+    padding: 15px;
+}
+
 /* emoji select-dropdown */
 .select-dropdown {
     color: #fff;

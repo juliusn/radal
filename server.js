@@ -4,6 +4,7 @@ const logger = require('morgan');
 const debug = require('debug')('http');
 const https = require('https');
 const app = express();
+const helmet = require('helmet');
 const expressSession = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
@@ -16,7 +17,7 @@ const env = app.get('env');
 const dev = env !== 'production';
 debug('NODE_ENV: ', env);
 const dbstring = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/radal`;
-
+app.use(helmet());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 

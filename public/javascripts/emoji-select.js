@@ -13,6 +13,6 @@ emoji.map((e, i) => {
       }
     };
     request.open('POST', '/users', true);
-  })
+  });
   container.appendChild(button);
 });

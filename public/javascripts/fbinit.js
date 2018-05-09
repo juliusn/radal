@@ -15,8 +15,7 @@ const statusChangeCallback = (response) => {
 
 const finishedRendering = () => {
   const spinner = document.querySelector('#spinner');
-  spinner.removeAttribute('style');
-  spinner.parentNode.removeChild(spinner);
+  if (spinner) spinner.parentNode.removeChild(spinner);
 };
 
 window.fbAsyncInit = () => {
