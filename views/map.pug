@@ -12,8 +12,15 @@ block body
 
   .container.fill-vertically
     .row.fill-vertically.mapui-container
-      .map-container
-        #spinner
+
+      #disabling-overlay.opacity-fade(onclick='return false')
+
+      .centered.text-center#overlay-info
+        .spinner
+        h5 Finding Your Location, Please Wait...
+
+      .map-container.text-center
+
         div#map
 
       #collapsibles
@@ -24,11 +31,18 @@ block body
         div.collapse#userEmojiSelect
           include userEmojiSelect
 
+        div.collapse#geotagComposer
+          include geotagComposer
+
       div.nav-container
+
         a.btn.btn-primary.nav-toggle(href='#userInfo', role='button')
           span.glyphicon.glyphicon-user
 
         a.btn.btn-primary.nav-toggle(href='#userEmojiSelect', role='button') 😀
+
+        a.btn.btn-primary.nav-toggle(href='#geotagComposer', role='button')
+          span.glyphicon.glyphicon-map-marker
 
 
 append scripts
