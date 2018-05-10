@@ -4,6 +4,7 @@ const UserSchema = new mongoose.Schema({
   name: String,
   userid: String,
   emoji: {type: String, default: '🙂'},
+  location: {type: [Number]},
   geotags: [{type: mongoose.Schema.ObjectId, ref: 'Geotag'}],
   updated_at: {type: Date, default: Date.now()},
 });
