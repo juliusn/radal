@@ -24,6 +24,17 @@ router.post('/geotag', (req, res) => {
   });
 });
 
+router.post('/location', (req, res) => {
+  User.findById(req.user._id, (err, user) => {
+    if (err) return res.status(500).send(err);
+    user.location = [req.body.lat, req.body.lng];
+    user.save((err, user) => {
+      if (err) return res.status(500).send(err);
+      res.status(201).send(user);
+    });
+  });
+});
+
 router.get('/', (req, res) => {
   User.findById(req.user._id, (err, user) => {
     if (err) return res.status(500).send(err);
