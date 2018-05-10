@@ -21,6 +21,7 @@ mongoose.connect(dbstring).
       const cookieParser = require('cookie-parser');
       app.use(cookieParser(process.env.SESSION_SECRET));
       app.use(require('body-parser').json());
+      app.use(require('body-parser').urlencoded({extended: true}));
       const session = require('express-session');
       const MongoStore = require('connect-mongo')(session);
       const sessionStore = new MongoStore(

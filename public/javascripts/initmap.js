@@ -1,7 +1,4 @@
 function initMap() {
-
-  let latLng;
-  let map;
   let mapEnabled = false;
   let mapElmnt = document.getElementById('map');
   const icon = {
@@ -46,7 +43,7 @@ function initMap() {
         center: latLng,
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: true,
+        disableDefaultUI: false,
         draggable: false,
       });
     }

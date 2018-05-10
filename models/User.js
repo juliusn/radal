@@ -4,10 +4,8 @@ const UserSchema = new mongoose.Schema({
   name: String,
   userid: String,
   emoji: {type: String, default: '🙂'},
-  updated_at: {
-    type: Date,
-    default: Date.now(),
-  },
+  geotags: [{type: mongoose.Schema.ObjectId, ref: 'Geotag'}],
+  updated_at: {type: Date, default: Date.now()},
 });
 
 UserSchema.statics.findOneOrCreate = function findOneOrCreate(

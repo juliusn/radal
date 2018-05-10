@@ -9,7 +9,10 @@ block body
     const domain = '!{backend}';
     const socket = io.connect(domain);
     socket.on('')
+    let map;
+    let latLng;
     let emoji;
+    let geotagMarker;
     let marker;
 
     function enableMapUI() {
@@ -78,7 +81,7 @@ block body
         div.collapse#userEmojiSelect
           include userEmojiSelect
 
-        div.collapse#geotagComposer
+        div.collapse#geotagComposer(visible-callback='openComposer()')
           include geotagComposer
 
       div.nav-container

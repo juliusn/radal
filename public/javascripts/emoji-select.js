@@ -15,6 +15,7 @@ containers.forEach((container) => {
           updateUI();
           $('.collapse').slideUp('fast');
         }
+        if (xhr.readyState === 4 && xhr.status === 500) alert(xhr.responseText);
       };
       xhr.send(JSON.stringify(data));
     });

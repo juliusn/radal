@@ -1,32 +1,39 @@
-form#geotagComposer(method='POST', enctype='multipart/form-data')
+.ui-content
+  form#geotagComposer(method='POST', enctype='multipart/form-data')
 
-  .location-content
+    h5 Add new geotag on your location:
 
-    .form-group
-      div.select-dropdown
-        select
-          option Select Emoji:
-
-    .form-group
-      label(for='markerDescription') Write Description
-      textarea.form-control#markerDescription(rows=3)
-      button.btn.btn-primary.button-submit(type='submit') Submit
+    // input#markerDescription(type='text', name='message', required='true')
+    textarea#markerDescription.form-control(type='text', placeholder='Message', rows='3', name='message', required='true', maxlength='500')
+    button.btn.btn-primary Submit
 
     script.
+      function openComposer() {
+        if (geotagMarker) {
+          geotagMarker.setMap(null);
+          geotagMarker = null;
+        }
+        geotagMarker = new google.maps.Marker({
+          position: latLng,
+          visible: true,
+          animation: google.maps.Animation.DROP,
+          map: map
+        });
+      }
       const form = document.querySelector('#geotagComposer');
-      form.addEventListener('submit', function(submitEvent) {
-        submitEvent.preventDefault();
-        const formData = new FormData(form);
-        const request = new XMLHttpRequest();
-
-        request.onload = function(ev) {
-          if (request.status === 200) {
-            uploadForm.reset();
-            alert('OK');
-          } else {
-            alert(request.statusText);
+      form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        let data = new FormData(form);
+        data.append('location', [geotagMarker.getPosition().lat(), geotagMarker.getPosition().lng()])
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 201) {
+            geotagMarker.setMap(null);
+            geotagMarker = null;
+            $('.collapse').slideUp('fast');
           }
+          if (xhr.readyState === 4 && xhr.status === 500) alert(xhr.responseText);
         };
-        request.open('POST', '/geotags', true);
-        request.send(formData);
-      });
+        xhr.open('POST', '/users/geotag', true);
+        xhr.send(data);
+      })
