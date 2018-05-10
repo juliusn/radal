@@ -12,19 +12,8 @@ containers.forEach((container) => {
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 201) {
           emoji = xhr.response.emoji;
-          if (marker) {
-            const label = {text: emoji, fontSize: '14px'};
-            marker.setLabel(label);
-            marker.set('icon', {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 0,
-              strokeColor: '#ffffff',
-              strokeWeight: 0,
-            });
-          }
-          document.querySelectorAll('.user-emoji').forEach((elmnt) => {
-            elmnt.innerHTML = emoji;
-          });
+          updateUI();
+          $('.collapse').slideUp('fast');
         }
       };
       xhr.send(JSON.stringify(data));

@@ -20,12 +20,43 @@ block body
       info.style.opacity = '0';
       setTimeout(function() {
         info.parentNode.removeChild(info);
-        }, 2400);
+      }, 2400);
       let buttons = document.querySelectorAll('.nav-toggle.disabled');
       buttons.forEach(function(button) {
         button.classList.remove('disabled');
       })
       mapEnabled = true;
+    }
+
+    function updateUserEmoji() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', '/users');
+      xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+      xhr.responseType = 'json';
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          emoji = xhr.response.emoji;
+          updateUI();
+        }
+      };
+      xhr.send();
+    }
+
+    function updateUI() {
+      if (marker && emoji) {
+        marker.setLabel({text: emoji, fontSize: '14px'});
+        marker.set('icon', {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0,
+          strokeColor: '#ffffff',
+          strokeWeight: 0
+        });
+      }
+      if (emoji) {
+        document.querySelectorAll('.user-emoji').forEach(function(elmnt) {
+          elmnt.innerHTML = emoji;
+        });
+      }
     }
 
   .container.fill-vertically
@@ -55,7 +86,7 @@ block body
         a.btn.btn-primary.nav-toggle(href='#userInfo', role='button')
           span.glyphicon.glyphicon-user
 
-        a.btn.btn-primary.nav-toggle.disabled.user-emoji(href='#userEmojiSelect', role='button') 😀
+        a.btn.btn-primary.nav-toggle.disabled.user-emoji(href='#userEmojiSelect', role='button') ?
 
         a.btn.btn-primary.nav-toggle.disabled(href='#geotagComposer', role='button')
           span.glyphicon.glyphicon-map-marker
