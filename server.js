@@ -20,6 +20,7 @@ mongoose.connect(dbstring).
       debug('Database connected!');
       const cookieParser = require('cookie-parser');
       app.use(cookieParser(process.env.SESSION_SECRET));
+      app.use(require('body-parser').json());
       const session = require('express-session');
       const MongoStore = require('connect-mongo')(session);
       const sessionStore = new MongoStore(
@@ -45,6 +46,7 @@ mongoose.connect(dbstring).
       app.use('/authenticate', require('./routes/authenticate'));
       app.use('/map', require('./routes/map'));
       app.use('/error', require('./routes/error'));
+      app.use('/users', require('./routes/users'));
 
       let server;
 

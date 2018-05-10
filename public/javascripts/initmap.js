@@ -2,7 +2,6 @@ function initMap() {
 
   let latLng;
   let map;
-  let marker;
   let mapEnabled = false;
   let mapElmnt = document.getElementById('map');
 
