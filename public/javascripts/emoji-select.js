@@ -2,6 +2,7 @@ const containers = document.querySelectorAll('.emoji-select');
 containers.forEach((container) => {
   emojis.map((e, i) => {
     const button = document.createElement('button');
+    button.classList.add('btn');
     button.innerHTML = e;
     button.addEventListener('click', function(ev) {
       const data = {emoji: e};

@@ -1,3 +1,15 @@
+body {
+    background-color: #f3f3f3;
+}
+
+#collapsibles {
+    z-index: 80;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: white;
+}
+
 #disabling-overlay {
     display: block;
     position: absolute;
@@ -13,12 +25,14 @@
     display: block;
     width: auto;
     height: 0px;
-    position:absolute;
-    left:0; right:0;
-    top:0; bottom:0;
-    margin:auto;
-    max-width:100%;
-    max-height:100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
     overflow: visible;
 }
 
@@ -49,8 +63,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 #map {
@@ -84,6 +102,7 @@ html, body, .fill-vertically {
     justify-content: center;
     align-items: center;
     background-color: #e6e6e6;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container > a {
@@ -93,6 +112,9 @@ html, body, .fill-vertically {
 
 .ui-content {
     padding: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: #444444;
 }
 
 /* emoji select-dropdown */

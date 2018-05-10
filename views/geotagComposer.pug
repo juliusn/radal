@@ -1,39 +1,50 @@
 .ui-content
   form#geotagComposer(method='POST', enctype='multipart/form-data')
 
-    h5 Add new geotag on your location:
+    #alert.alert.alert-danger(style='display: none')
+    h5 Add new geotag on marked location:
 
-    // input#markerDescription(type='text', name='message', required='true')
-    textarea#markerDescription.form-control(type='text', placeholder='Message', rows='3', name='message', required='true', maxlength='500')
+    textarea.form-control(type='text', placeholder='Message', rows='3', name='message', required='true', maxlength='500')
     button.btn.btn-primary Submit
 
-    script.
-      function openComposer() {
-        if (geotagMarker) {
+  script.
+    const form = document.querySelector('form#geotagComposer');
+    function openComposer() {
+      form.reset();
+      if (geotagMarker) {
+        geotagMarker.setMap(null);
+        geotagMarker = null;
+      }
+      geotagMarker = new google.maps.Marker({
+        position: latLng,
+        visible: true,
+        animation: google.maps.Animation.DROP,
+        map: map
+      });
+    }
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      $('#alert').slideUp('fast');
+      let data;
+      try {
+        data = new FormData(form);
+      } catch(e) {
+        return alert(e);
+      }
+      data.append('location', [geotagMarker.getPosition().lat(), geotagMarker.getPosition().lng()])
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 201) {
           geotagMarker.setMap(null);
           geotagMarker = null;
+          $('.collapse').slideUp('fast');
         }
-        geotagMarker = new google.maps.Marker({
-          position: latLng,
-          visible: true,
-          animation: google.maps.Animation.DROP,
-          map: map
-        });
-      }
-      const form = document.querySelector('#geotagComposer');
-      form.addEventListener('submit', function(ev) {
-        ev.preventDefault();
-        let data = new FormData(form);
-        data.append('location', [geotagMarker.getPosition().lat(), geotagMarker.getPosition().lng()])
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 201) {
-            geotagMarker.setMap(null);
-            geotagMarker = null;
-            $('.collapse').slideUp('fast');
-          }
-          if (xhr.readyState === 4 && xhr.status === 500) alert(xhr.responseText);
-        };
-        xhr.open('POST', '/users/geotag', true);
-        xhr.send(data);
-      })
+        if (xhr.readyState === 4 && xhr.status !== 201) {
+          let alert = document.querySelector('#alert');
+          alert.innerHTML = xhr.responseText;
+          $('#alert').slideDown('fast');
+        }
+      };
+      xhr.open('POST', '/users/geotag', true);
+      xhr.send(data);
+    })
