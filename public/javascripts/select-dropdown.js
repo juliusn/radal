@@ -1,6 +1,6 @@
 document.querySelectorAll('.select-dropdown').forEach((dd) => {
   const select = dd.querySelector('select');
-  emoji.map((e, i) => {
+  emojis.map((e, i) => {
     const opt = document.createElement('option');
     opt.value = i + 1;
     opt.innerHTML = e;

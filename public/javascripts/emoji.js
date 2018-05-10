@@ -1,4 +1,4 @@
-const emoji = [
+const emojis = [
   '😀',
   '😁',
   '😂',

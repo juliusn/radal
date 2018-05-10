@@ -9,7 +9,7 @@ block body
     const domain = '!{backend}';
     const socket = io.connect(domain);
     socket.on('')
-
+    let emoji;
     let marker;
 
     function enableMapUI() {
@@ -33,7 +33,7 @@ block body
 
       #overlay-info.centered.text-center.opacity-fade
         .spinner
-        h5.message Finding Your Location, Please Wait...
+        h5.message Finding your location, please wait...
 
       .map-container
 
@@ -55,7 +55,7 @@ block body
         a.btn.btn-primary.nav-toggle(href='#userInfo', role='button')
           span.glyphicon.glyphicon-user
 
-        a.btn.btn-primary.nav-toggle.disabled(href='#userEmojiSelect', role='button') 😀
+        a.btn.btn-primary.nav-toggle.disabled.user-emoji(href='#userEmojiSelect', role='button') 😀
 
         a.btn.btn-primary.nav-toggle.disabled(href='#geotagComposer', role='button')
           span.glyphicon.glyphicon-map-marker
