@@ -14,10 +14,12 @@ block body
     let emoji;
     let geotagMarker;
     let marker;
+    let activeUsers;
 
     function enableMapUI() {
+      mapEnabled = true;
       let info = document.querySelector('#overlay-info');
-      let spinner = info.querySelector('.spinner');
+      let spinner = document.querySelector('.spinner');
       spinner.parentNode.removeChild(spinner);
       info.querySelector('.message').innerText = 'Found You!';
       info.style.opacity = '0';
@@ -28,7 +30,6 @@ block body
       buttons.forEach(function(button) {
         button.classList.remove('disabled');
       })
-      mapEnabled = true;
     }
 
     function updateUserEmoji() {

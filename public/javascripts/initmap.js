@@ -14,7 +14,7 @@ function initMap() {
     strokeWeight: 0,
   };
 
-  navigator.geolocation.watchPosition(updateMap,
+  navigator.geolocation.watchPosition(syncPosition,
       handleLocationError);
 
   updateUserEmoji();
@@ -23,7 +23,7 @@ function initMap() {
     alert(error.message);
   }
 
-  function updateMap(position) {
+  function syncPosition(position) {
     const data = {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
@@ -57,18 +57,29 @@ function initMap() {
             icon: !emoji ? icon : invisible,
             label: emoji ? {
               text: emoji,
-              fontSize: '14px',
+              fontSize: '20px',
             } : null,
             draggable: false,
             map: map,
           });
         }
+        mapUsers();
         if (!mapEnabled) enableMapUI();
       }
       if (xhr.readyState === 4 && xhr.status === 500) alert(xhr.responseText);
     };
     xhr.send(JSON.stringify(data));
+  }
 
-
+  function mapUsers() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/users/activeusers', true);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        activeUsers = JSON.parse(xhr.responseText);
+        console.log('active users', activeUsers);
+      }
+    };
+    xhr.send();
   }
 }

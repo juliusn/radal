@@ -170,3 +170,7 @@ html, body, .fill-vertically {
     left: 2px;
     text-align: center;
 }
+
+.emoji-button {
+    background: none;
+}
