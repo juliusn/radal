@@ -16,7 +16,11 @@ containers.forEach((container) => {
           updateUI();
           $('.collapse').slideUp('fast');
         }
-        if (xhr.readyState === 4 && xhr.status === 500) alert(xhr.responseText);
+        if (xhr.readyState === 4 && xhr.status === 500) {
+          let alert = document.querySelector('#emoji-select-alert');
+          alert.innerHTML = xhr.responseText;
+          $('#alert').slideDown('fast');
+        }
       };
       xhr.send(JSON.stringify(data));
     });
