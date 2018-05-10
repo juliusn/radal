@@ -1,50 +1,63 @@
 .ui-content
-  form#geotagComposer(method='POST', enctype='multipart/form-data')
+  form#geotagComposer
 
     #alert.alert.alert-danger(style='display: none')
     h5 Add new geotag on marked location:
+    textarea#geotag-message.form-control(type='text', placeholder='Message', rows='3', name='message', required='true', maxlength='500')
+    button#submit.btn.btn-primary Submit
 
-    textarea.form-control(type='text', placeholder='Message', rows='3', name='message', required='true', maxlength='500')
-    button.btn.btn-primary Submit
+script.
+  const form = document.querySelector('form#geotagComposer');
+  form.addEventListener('submit', function(ev) {
+    ev.preventDefault();
+  });
 
-  script.
-    const form = document.querySelector('form#geotagComposer');
-    function openComposer() {
-      form.reset();
-      if (geotagMarker) {
+  document.querySelector('button#submit').addEventListener('click', function(ev) {
+    submitGeotag();
+  });
+
+  function submitGeotag() {
+    $('#alert').slideUp('fast');
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/users/geotag', true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 201) {
         geotagMarker.setMap(null);
         geotagMarker = null;
+        $('.collapse').slideUp('fast');
       }
-      geotagMarker = new google.maps.Marker({
-        position: latLng,
-        visible: true,
-        animation: google.maps.Animation.DROP,
-        map: map
-      });
+      if (xhr.readyState === 4 && xhr.status !== 201) {
+        composerAlert(xhr.responseText);
+      }
+    };
+    let data = {
+      message: document.querySelector('textarea#geotag-message').value,
+      location: [
+        geotagMarker.getPosition().lat(),
+        geotagMarker.getPosition().lng()],
+      emoji: emoji
     }
-    form.addEventListener('submit', function(ev) {
-      ev.preventDefault();
-      $('#alert').slideUp('fast');
-      let data;
-      try {
-        data = new FormData(form);
-      } catch(e) {
-        return alert(e);
-      }
-      data.append('location', [geotagMarker.getPosition().lat(), geotagMarker.getPosition().lng()])
-      const xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 201) {
-          geotagMarker.setMap(null);
-          geotagMarker = null;
-          $('.collapse').slideUp('fast');
-        }
-        if (xhr.readyState === 4 && xhr.status !== 201) {
-          let alert = document.querySelector('#alert');
-          alert.innerHTML = xhr.responseText;
-          $('#alert').slideDown('fast');
-        }
-      };
-      xhr.open('POST', '/users/geotag', true);
-      xhr.send(data);
-    })
+    xhr.send(JSON.stringify(data));
+  }
+
+  function openComposer() {
+    form.reset();
+    if (geotagMarker) {
+      geotagMarker.setMap(null);
+      geotagMarker = null;
+    }
+    geotagMarker = new google.maps.Marker({
+      position: latLng,
+      visible: true,
+      animation: google.maps.Animation.DROP,
+      map: map
+    });
+  }
+
+  function composerAlert(message) {
+    let alert = document.querySelector('#alert');
+    alert.innerHTML = message;
+    $('#alert').slideDown('fast');
+  }

@@ -4,7 +4,6 @@ const User = require('../models/User');
 const Geotag = require('../models/Geotag');
 
 router.post('/emoji', (req, res) => {
-  console.log(req.body);
   const emoji = req.body.emoji;
   User.findById(req.user._id, (err, user) => {
     if (err) return res.status(500).send(err);
@@ -17,7 +16,6 @@ router.post('/emoji', (req, res) => {
 });
 
 router.post('/geotag', (req, res) => {
-  console.log(req.body);
   const geotag = new Geotag(req.body);
   geotag.creator = req.user._id;
   geotag.save((err) => {
@@ -28,7 +26,7 @@ router.post('/geotag', (req, res) => {
 
 router.get('/', (req, res) => {
   User.findById(req.user._id, (err, user) => {
-    if (err) return res.status(500).send();
+    if (err) return res.status(500).send(err);
     res.status(200).send(user);
   });
 });
